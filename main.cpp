@@ -23,10 +23,15 @@ int main()
 
   Graph graph(Nodes, Edges);
 
-  auto resultado = graph.verificarSeEKColorivel();
+  auto resultado = graph.verificarSeEKColorivel(k);
 
   std::cout << std::boolalpha;
   std::cout << "É k-colorível: " << resultado << "\n";
+  
+  if (resultado)
+  {
+    graph.imprimirColoring();
+  }
 
   return 0;
 }

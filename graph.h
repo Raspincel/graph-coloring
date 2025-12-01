@@ -14,57 +14,80 @@ private:
   std::vector<Node> nodes;
   std::vector<Edge> edges;
 
-  struct TreeNode
+  // Verifica se é seguro colorir o vértice 'nodeIndex' com a cor 'cor'
+  bool corSegura(int nodeIndex, int cor)
   {
-    Node &node;
-    std::vector<TreeNode> children;
-  };
-
-  bool imprimirTreeNode(const TreeNode &tn, int nivel = 0)
-  {
-    std::string indent(nivel * 2, ' ');
-    std::cout << indent << tn.node << "\n";
-
-    bool resultado = tn.node.temCorValida();
-
-    for (const TreeNode &filho : tn.children)
-    {
-      resultado = resultado && imprimirTreeNode(filho, nivel + 1);
-    }
-
-    return resultado;
-  }
-
-  void preencherArvore(TreeNode &etn)
-  {
-    std::vector<std::reference_wrapper<Edge>> edges;
-    edges.reserve(this->edges.size());
-
-    std::copy_if(this->edges.begin(), this->edges.end(), std::back_inserter(edges), [&etn](Edge &edge)
-                 { return edge.pegarPrimeiroNo().compararValorNo(etn.node); });
-
+    int idAtual = nodes[nodeIndex].obterId();
+    
+    // Verifica todos os vizinhos do vértice
     for (const auto &edge : edges)
     {
-      TreeNode tn{edge.get().pegarSegundoNo()};
-      preencherArvore(tn);
+      Node &node1 = edge.pegarPrimeiroNo();
+      Node &node2 = edge.pegarSegundoNo();
 
-      etn.children.emplace_back(std::move(tn));
+      // Encontra o vizinho do vértice atual
+      int idVizinho = -1;
+      if (node1.obterId() == idAtual)
+      {
+        idVizinho = node2.obterId();
+      }
+      else if (node2.obterId() == idAtual)
+      {
+        idVizinho = node1.obterId();
+      }
+
+      // Se encontrou um vizinho, verifica se ele já foi colorido com a mesma cor
+      if (idVizinho != -1)
+      {
+        // Encontra o nó correspondente no vector
+        for (int i = 0; i < nodeIndex; i++)
+        {
+          if (nodes[i].obterId() == idVizinho)
+          {
+            // Se o vizinho já foi colorido com a mesma cor, não é seguro
+            if (nodes[i].obterCor() == cor)
+            {
+              return false;
+            }
+            break;
+          }
+        }
+      }
     }
+    return true;
   }
 
-  void selecionarCores(TreeNode &etn)
+  // Algoritmo de backtracking recursivo
+  bool backtrackingColoring(int nodeIndex, int k)
   {
-    int cor = etn.node.pegarProximaCorDisponivel();
-
-    for (const auto &child : etn.children)
+    // Se todos os vértices foram coloridos, sucesso
+    if (nodeIndex == (int)nodes.size())
     {
-      child.node.removerCor(cor);
+      return true;
     }
 
-    for (auto &child : etn.children)
+    // Tenta cada cor de 0 a k-1
+    for (int cor = 0; cor < k; cor++)
     {
-      selecionarCores(child);
+      // Verifica se é seguro colorir este vértice com esta cor
+      if (corSegura(nodeIndex, cor))
+      {
+        // Atribui a cor
+        nodes[nodeIndex].definirCor(cor);
+
+        // Recursivamente tenta colorir os próximos vértices
+        if (backtrackingColoring(nodeIndex + 1, k))
+        {
+          return true;
+        }
+
+        // Se não funcionou, remove a cor (backtrack)
+        nodes[nodeIndex].resetarCor();
+      }
     }
+
+    // Se nenhuma cor funcionou, retorna false
+    return false;
   }
 
 public:
@@ -72,17 +95,30 @@ public:
   {
   }
 
-  bool verificarSeEKColorivel()
+  bool verificarSeEKColorivel(int k)
   {
-    if (this->nodes.size() == 0)
+    if (nodes.size() == 0)
     {
       return true;
     }
 
-    TreeNode tn = {this->nodes[0]};
-    preencherArvore(tn);
-    selecionarCores(tn);
-    return imprimirTreeNode(tn);
+    // Reseta todas as cores
+    for (auto &node : nodes)
+    {
+      node.resetarCor();
+    }
+
+    // Inicia o backtracking a partir do primeiro vértice
+    return backtrackingColoring(0, k);
+  }
+
+  void imprimirColoring()
+  {
+    std::cout << "Coloração encontrada:\n";
+    for (const auto &node : nodes)
+    {
+      std::cout << "Vértice " << node.obterId() << ": Cor " << node.obterCor() << "\n";
+    }
   }
 
   ~Graph() {}

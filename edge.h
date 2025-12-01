@@ -12,12 +12,12 @@ private:
 public:
   Edge(Node &node1_, Node &node2_) : node1(node1_), node2(node2_) {}
 
-  Node &pegarPrimeiroNo()
+  Node &pegarPrimeiroNo() const
   {
     return this->node1;
   }
 
-  Node &pegarSegundoNo()
+  Node &pegarSegundoNo() const
   {
     return this->node2;
   }

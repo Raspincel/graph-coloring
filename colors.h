@@ -7,9 +7,10 @@ class Color
 {
 private:
   std::vector<bool> availableColors;
+  int corAtribuida; // Armazena a cor atribuída explicitamente (-1 se nenhuma)
 
 public:
-  Color(int maxColors) : availableColors(maxColors, true) {};
+  Color(int maxColors) : availableColors(maxColors, true), corAtribuida(-1) {};
 
   void removerCor(int cor)
   {
@@ -37,6 +38,36 @@ public:
                            { return c; });
 
     return it != this->availableColors.end();
+  }
+
+  void definirCor(int cor)
+  {
+    if (cor >= 0 && cor < (int)availableColors.size())
+    {
+      corAtribuida = cor;
+    }
+    else
+    {
+      corAtribuida = -1;
+    }
+  }
+
+  int obterCorAtual() const
+  {
+    return corAtribuida;
+  }
+
+  bool corDisponivel(int cor)
+  {
+    if (cor < 0 || cor >= (int)availableColors.size())
+      return false;
+    return availableColors[cor];
+  }
+
+  void resetar()
+  {
+    std::fill(availableColors.begin(), availableColors.end(), true);
+    corAtribuida = -1;
   }
 
   friend std::ostream &operator<<(std::ostream &out, const Color &color);

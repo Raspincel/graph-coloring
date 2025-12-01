@@ -10,7 +10,7 @@ private:
   int id;
 
 public:
-  Node(int id_, int maxColors) : id(id_), color(maxColors)
+  Node(int id_, int maxColors) : color(maxColors), id(id_)
   {
   }
 
@@ -32,6 +32,26 @@ public:
   bool temCorValida()
   {
     return color.temCorValida();
+  }
+
+  void definirCor(int cor)
+  {
+    this->color.definirCor(cor);
+  }
+
+  int obterId() const
+  {
+    return this->id;
+  }
+
+  int obterCor() const
+  {
+    return this->color.obterCorAtual();
+  }
+
+  void resetarCor()
+  {
+    this->color.resetar();
   }
 
   friend std::ostream &operator<<(std::ostream &out, const Node &node);
