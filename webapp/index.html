@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Graph Editor</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🔷 Interactive Graph Editor</h1>
+        <p class="subtitle">Create nodes, define edges, and drag them around</p>
+      </div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label>Node ID:</label>
+          <input type="text" id="nodeId" placeholder="e.g., A, node1, 1" />
+        </div>
+
+        <div class="control-group">
+          <label>Node Position (x, y):</label>
+          <input
+            type="number"
+            id="nodeX"
+            placeholder="X"
+            value="100"
+            style="width: 100px; margin-right: 8px"
+          />
+          <input
+            type="number"
+            id="nodeY"
+            placeholder="Y"
+            value="100"
+            style="width: 100px"
+          />
+        </div>
+
+        <div class="control-group">
+          <label>Node Color:</label>
+          <select id="nodeColor">
+            <option value="#667eea">Purple</option>
+            <option value="#f093fb">Pink</option>
+            <option value="#4facfe">Blue</option>
+            <option value="#43e97b">Green</option>
+            <option value="#fa709a">Rose</option>
+            <option value="#feca57">Yellow</option>
+            <option value="#ff6b6b">Red</option>
+            <option value="#95afc0">Gray</option>
+          </select>
+        </div>
+
+        <div class="button-group">
+          <button onclick="addNode()">➕ Add Node</button>
+        </div>
+
+        <div class="control-group" style="margin-top: 24px">
+          <label>Edge (From → To):</label>
+          <input
+            type="text"
+            id="edgeFrom"
+            placeholder="From Node ID"
+            style="width: 140px; margin-right: 8px"
+          />
+          <input
+            type="text"
+            id="edgeTo"
+            placeholder="To Node ID"
+            style="width: 140px"
+          />
+        </div>
+
+        <div class="button-group">
+          <button onclick="addEdge()">🔗 Add Edge</button>
+          <button
+            onclick="clearGraph()"
+            style="
+              background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            "
+          >
+            🗑️ Clear All
+          </button>
+        </div>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="canvas" width="1200" height="600"></canvas>
+      </div>
+
+      <div class="info">
+        💡 <strong>Tip:</strong> Click and drag nodes to reposition them. Hover
+        over nodes to see effects. Edges will follow the nodes automatically.
+      </div>
+    </div>
+
+    <script src="logic.js" defer></script>
+    <script src="script.js" defer></script>
+    <script src="event-listeners.js" defer></script>
+  </body>
+</html>
